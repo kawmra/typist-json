@@ -1,4 +1,4 @@
-import {expectType} from 'tsd';
+import {expectNotType, expectType} from 'tsd';
 import {j, Validator} from '../lib';
 
 // string
@@ -68,6 +68,17 @@ expectType<Validator<{foo: string}[]>>(j.array(j.object({foo: j.string})));
 
 // object
 expectType<Validator<{}>>(j.object({}));
+expectType<Validator<{optional?: string}>>(j.object({'optional?': j.string}));
+expectNotType<Validator<{optional: string | undefined}>>(
+  j.object({'optional?': j.string})
+);
+expectType<Validator<{'escaped?': string}>>(j.object({'escaped??': j.string}));
+expectType<Validator<{'escaped_optional?'?: string}>>(
+  j.object({'escaped_optional???': j.string})
+);
+expectNotType<Validator<{'escaped_optional?': string | undefined}>>(
+  j.object({'escaped_optional???': j.string})
+);
 expectType<
   Validator<{
     string: string;
@@ -82,9 +93,9 @@ expectType<
     nested: {
       string: string;
     };
-    optional: string | undefined;
+    optional?: string;
     'escaped?': string;
-    'escaped_optional?': string | undefined;
+    'escaped_optional?'?: string;
   }>
 >(
   j.object({

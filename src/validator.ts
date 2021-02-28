@@ -74,15 +74,9 @@ export function array<T extends Validator<unknown>>(
 
 export function object<T extends {[key: string]: Validator<unknown>}>(
   properties: T
-): Validator<
-  {[K in keyof T as PropertyName<K>]: JsonOf<T[K]> | PropertyOptionality<K>}
-> {
+): Validator<ExpandRecursively<ObjectJsonOf<T>>> {
   return {
-    validate(
-      value: unknown
-    ): value is {
-      [K in keyof T as PropertyName<K>]: JsonOf<T[K]> | PropertyOptionality<K>;
-    } {
+    validate(value: unknown): value is ExpandRecursively<ObjectJsonOf<T>> {
       if (typeof value !== 'object' || value === null) return false;
       return Object.keys(properties).every(key => {
         return has(value, key) && properties[key].validate(value[key]);
@@ -91,16 +85,27 @@ export function object<T extends {[key: string]: Validator<unknown>}>(
   };
 }
 
-type PropertyOptionality<T> = T extends `${infer U}??`
-  ? PropertyOptionality<U>
-  : T extends `${infer U}?`
-  ? undefined
-  : never;
-
-type PropertyName<T> = T extends `${infer U}??`
-  ? `${PropertyName<U>}?`
+type FilterOptionalPropertyName<T> = T extends `${infer U}??`
+  ? `${FilterOptionalPropertyName<U>}?`
   : T extends `${infer U}?`
   ? U
+  : never;
+
+type FilterRequiredPropertyName<T> = T extends `${infer U}??`
+  ? `${FilterRequiredPropertyName<U>}?`
+  : T extends `${infer U}?`
+  ? never
+  : T;
+
+type ObjectJsonOf<T extends {[k: string]: Validator<unknown>}> = {
+  [K in keyof T as FilterRequiredPropertyName<K>]-?: JsonOf<T[K]>;
+} &
+  {[K in keyof T as FilterOptionalPropertyName<K>]+?: JsonOf<T[K]>};
+
+type ExpandRecursively<T> = T extends object
+  ? T extends infer O
+    ? {[K in keyof O]: ExpandRecursively<O[K]>}
+    : never
   : T;
 
 // https://github.com/microsoft/TypeScript/issues/21732#issuecomment-663994772
