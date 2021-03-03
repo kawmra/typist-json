@@ -24,4 +24,4 @@ export const j = {
   object: object,
 };
 
-export {Validator} from './validator';
+export {Validator, JsonOf} from './validator';
