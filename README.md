@@ -161,6 +161,17 @@ validator.validate({
   name: "Emma",
   age: 20,
 })
+
+// false, because `nickname` is optional, not nullable.
+// optional properties are distinguished from nullable properties.
+validator.validate({
+  name: "Bob",
+  age: 18,
+  nickname: null, // invalid
+})
+
+// similarly, nullable properties cannot be omitted.
+j.object({ foo: j.nullable(j.string) }).validate({}) // false, because property named `foo` is required
 ```
 
 If you want to use property name that ends with `?` as non-optional property, you can escape `?` as `??`.
