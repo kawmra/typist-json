@@ -17,7 +17,7 @@ npm install typist-json
 ```typescript
 import { j } from 'typist-json'
 
-const UserJson = j.object({
+const UserJsonValidator = j.object({
   name: j.string,
   age: j.number,
   'nickname?': j.string, // optional property
@@ -26,7 +26,7 @@ const UserJson = j.object({
 const userJson = await fetch("/api/user")
     .then(res => res.json)
 
-if (UserJson.validate(userJson)) {
+if (UserJsonValidator.validate(userJson)) {
   // now, the userJson is narrowed to:
   // {
   //   name: string
