@@ -212,7 +212,7 @@ const validator = j.object({
 })
 
 type SmartPhoneJson = JsonOf<typeof validator>
-// SmartPhone will be:
+// SmartPhoneJson will be:
 // {
 //   model: string
 //   os: "ios" | "android" | "blackberry"
