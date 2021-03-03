@@ -199,3 +199,23 @@ validator.validate({
 ## JsonOf\<Validator>
 
 A type alias that represents the type of JSON corresponding to the `Validator`.
+
+```TypeScript
+const validator = j.object({
+  model: j.string,
+  os: j.any([
+    j.literal("ios"),
+    j.literal("android"),
+    j.literal("blackberry")
+  ]),
+  serial_number: j.string,
+})
+
+type SmartPhoneJson = JsonOf<typeof validator>
+// SmartPhone will be:
+// {
+//   model: string
+//   os: "ios" | "android" | "blackberry"
+//   serial_number: string
+// }
+```
