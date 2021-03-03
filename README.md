@@ -178,6 +178,7 @@ validator.validate({
 
 <details>
 <summary>More details for escaping</summary>
+
 As mentioned above, you need to escape all trailing `?` as `??`.
 
 So if you want optional property with a name `"foo???"`,
