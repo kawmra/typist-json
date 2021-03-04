@@ -2,9 +2,9 @@
 
 A simple type-safe JSON validator.
 
-- **Simple**: No JSON Schema required
-- **Type-safe**: Written in TypeScript
-- **Intuitive**: Familiar syntax like TypeScript interface
+- **Simple**. No JSON Schema required
+- **Type-safe**. Written in TypeScript
+- **Intuitive**. Familiar syntax like TypeScript interface
 
 # Install
 
@@ -188,7 +188,7 @@ validator.validate({
 ```
 
 <details>
-<summary>More details for escaping</summary>
+<summary>More details about escaping</summary>
 
 As mentioned above, you need to escape all trailing `?` as `??`.
 
