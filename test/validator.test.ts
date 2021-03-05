@@ -1,45 +1,18 @@
 import {
+  any,
+  array,
   boolean,
   isOptionalProperty,
   literal,
   nil,
+  nullable,
   number,
   object,
   string,
   unescapePropertyName,
   unknown,
-  any,
-  nullable,
-  Validator,
-  array,
 } from '../src/validator';
-
-class TestValidator implements Validator<unknown> {
-  isCalled = false;
-  private readonly result: boolean;
-
-  constructor(result: boolean) {
-    this.result = result;
-  }
-
-  validate(value: unknown): value is unknown {
-    this.isCalled = true;
-    return this.result;
-  }
-}
-
-class TestSequenceValidator implements Validator<unknown> {
-  private callCount = 0;
-  private readonly results: boolean[];
-
-  constructor(results: boolean[]) {
-    this.results = results;
-  }
-
-  validate(value: unknown): value is unknown {
-    return this.results[this.callCount++];
-  }
-}
+import {TestSequenceValidator, TestValidator} from './test-validators';
 
 describe('validator', () => {
   test('string', () => {
