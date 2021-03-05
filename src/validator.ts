@@ -79,7 +79,12 @@ export function object<T extends {[key: string]: Validator<unknown>}>(
     validate(value: unknown): value is ExpandRecursively<ObjectJsonOf<T>> {
       if (typeof value !== 'object' || value === null) return false;
       return Object.keys(properties).every(key => {
-        return has(value, key) && properties[key].validate(value[key]);
+        const unescapedKey = unescapePropertyName(key);
+        if (has(value, unescapedKey)) {
+          return properties[key].validate(value[unescapedKey]);
+        } else {
+          return isOptionalProperty(key);
+        }
       });
     },
   };
@@ -107,6 +112,20 @@ type ExpandRecursively<T> = T extends object
     ? {[K in keyof O]: ExpandRecursively<O[K]>}
     : never
   : T;
+
+export function isOptionalProperty(propertyName: string): boolean {
+  return propertyName.match(/[^?]?(?:\?\?)*(\?)?$/)?.[1] === '?';
+}
+
+export function unescapePropertyName(propertyName: string): string {
+  const match = propertyName.match(/^(.*?[^?]?)((?:\?\?)*)\??$/);
+  if (match === null) {
+    return propertyName;
+  }
+  const head = match[1] ?? '';
+  const questionMarks = match[2].replace(/\?\?/g, '?') ?? '';
+  return `${head}${questionMarks}`;
+}
 
 // https://github.com/microsoft/TypeScript/issues/21732#issuecomment-663994772
 function has<P extends PropertyKey>(
