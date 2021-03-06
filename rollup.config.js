@@ -4,12 +4,10 @@ module.exports = {
     {
       file: 'lib/index.js',
       format: 'cjs',
-      sourcemap: true,
     },
     {
       file: 'lib/index.esm.js',
       format: 'esm',
-      sourcemap: true,
     },
   ],
 };

@@ -8,7 +8,6 @@
     "moduleResolution": "Node",
     "declaration": true,
     "declarationDir": "lib",
-    "sourceMap": true,
     "outDir": "build"
   },
   "include": [
