@@ -1,12 +1,15 @@
 {
   "compilerOptions": {
+    "rootDir": "src",
     "strict": true,
     "target": "ES5",
-    "module": "commonjs",
     "lib": ["es2015"],
+    "module": "esnext",
+    "moduleResolution": "Node",
     "declaration": true,
+    "declarationDir": "lib",
     "sourceMap": true,
-    "outDir": "lib"
+    "outDir": "build"
   },
   "include": [
     "./src/**/*"
