@@ -9,7 +9,7 @@ import {
   object,
   string,
   unknown,
-} from './validator';
+} from './checker';
 
 export const j = {
   string: string,
@@ -24,4 +24,4 @@ export const j = {
   object: object,
 };
 
-export {Validator, JsonOf} from './validator';
+export {Checker, JsonOf} from './checker';

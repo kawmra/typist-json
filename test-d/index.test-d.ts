@@ -1,27 +1,27 @@
 import {expectNotType, expectType} from 'tsd';
-import {j, Validator} from '../lib';
+import {Checker, j} from '../lib';
 
 // string
-expectType<Validator<string>>(j.string);
+expectType<Checker<string>>(j.string);
 
 // number
-expectType<Validator<number>>(j.number);
+expectType<Checker<number>>(j.number);
 
 // boolean
-expectType<Validator<boolean>>(j.boolean);
+expectType<Checker<boolean>>(j.boolean);
 
 // null
-expectType<Validator<null>>(j.nil);
+expectType<Checker<null>>(j.nil);
 
 // unknown
-expectType<Validator<unknown>>(j.unknown);
+expectType<Checker<unknown>>(j.unknown);
 
 // literal
-expectType<Validator<'literal'>>(j.literal('literal'));
+expectType<Checker<'literal'>>(j.literal('literal'));
 
 // any
 expectType<
-  Validator<
+  Checker<
     | string
     | number
     | boolean
@@ -43,44 +43,42 @@ expectType<
     j.object({foo: j.string}),
   ])
 );
-expectType<Validator<unknown>>(j.any([j.string, j.unknown, j.number]));
+expectType<Checker<unknown>>(j.any([j.string, j.unknown, j.number]));
 
 // nullable
-expectType<Validator<string | null>>(j.nullable(j.string));
-expectType<Validator<string[] | null>>(j.nullable(j.array(j.string)));
-expectType<Validator<{foo: string} | null>>(
+expectType<Checker<string | null>>(j.nullable(j.string));
+expectType<Checker<string[] | null>>(j.nullable(j.array(j.string)));
+expectType<Checker<{foo: string} | null>>(
   j.nullable(j.object({foo: j.string}))
 );
-expectType<Validator<unknown>>(j.nullable(j.unknown));
+expectType<Checker<unknown>>(j.nullable(j.unknown));
 
 // array
-expectType<Validator<string[]>>(j.array(j.string));
-expectType<Validator<number[]>>(j.array(j.number));
-expectType<Validator<boolean[]>>(j.array(j.boolean));
-expectType<Validator<null[]>>(j.array(j.nil));
-expectType<Validator<unknown[]>>(j.array(j.unknown));
-expectType<Validator<'literal'[]>>(j.array(j.literal('literal')));
-expectType<Validator<(string | number)[]>>(
-  j.array(j.any([j.string, j.number]))
-);
-expectType<Validator<string[][]>>(j.array(j.array(j.string)));
-expectType<Validator<{foo: string}[]>>(j.array(j.object({foo: j.string})));
+expectType<Checker<string[]>>(j.array(j.string));
+expectType<Checker<number[]>>(j.array(j.number));
+expectType<Checker<boolean[]>>(j.array(j.boolean));
+expectType<Checker<null[]>>(j.array(j.nil));
+expectType<Checker<unknown[]>>(j.array(j.unknown));
+expectType<Checker<'literal'[]>>(j.array(j.literal('literal')));
+expectType<Checker<(string | number)[]>>(j.array(j.any([j.string, j.number])));
+expectType<Checker<string[][]>>(j.array(j.array(j.string)));
+expectType<Checker<{foo: string}[]>>(j.array(j.object({foo: j.string})));
 
 // object
-expectType<Validator<{}>>(j.object({}));
-expectType<Validator<{optional?: string}>>(j.object({'optional?': j.string}));
-expectNotType<Validator<{optional: string | undefined}>>(
+expectType<Checker<{}>>(j.object({}));
+expectType<Checker<{optional?: string}>>(j.object({'optional?': j.string}));
+expectNotType<Checker<{optional: string | undefined}>>(
   j.object({'optional?': j.string})
 );
-expectType<Validator<{'escaped?': string}>>(j.object({'escaped??': j.string}));
-expectType<Validator<{'escaped_optional?'?: string}>>(
+expectType<Checker<{'escaped?': string}>>(j.object({'escaped??': j.string}));
+expectType<Checker<{'escaped_optional?'?: string}>>(
   j.object({'escaped_optional???': j.string})
 );
-expectNotType<Validator<{'escaped_optional?': string | undefined}>>(
+expectNotType<Checker<{'escaped_optional?': string | undefined}>>(
   j.object({'escaped_optional???': j.string})
 );
 expectType<
-  Validator<{
+  Checker<{
     string: string;
     number: number;
     boolean: boolean;

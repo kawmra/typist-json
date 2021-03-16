@@ -1,6 +1,6 @@
-import {Validator} from '../src';
+import {Checker} from '../src';
 
-export class TestValidator implements Validator<unknown> {
+export class TestChecker implements Checker<unknown> {
   isCalled = false;
   private readonly result: boolean;
 
@@ -8,13 +8,13 @@ export class TestValidator implements Validator<unknown> {
     this.result = result;
   }
 
-  validate(value: unknown): value is unknown {
+  check(value: unknown): value is unknown {
     this.isCalled = true;
     return this.result;
   }
 }
 
-export class TestSequenceValidator implements Validator<unknown> {
+export class TestSequenceChecker implements Checker<unknown> {
   private callCount = 0;
   private readonly results: boolean[];
 
@@ -22,7 +22,7 @@ export class TestSequenceValidator implements Validator<unknown> {
     this.results = results;
   }
 
-  validate(value: unknown): value is unknown {
+  check(value: unknown): value is unknown {
     return this.results[this.callCount++];
   }
 }

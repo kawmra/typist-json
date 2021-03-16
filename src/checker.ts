@@ -1,87 +1,87 @@
-export interface Validator<T> {
-  validate(value: unknown): value is T;
+export interface Checker<T> {
+  check(value: unknown): value is T;
 }
 
-export type JsonOf<T extends Validator<unknown>> = T extends Validator<infer U>
+export type JsonOf<T extends Checker<unknown>> = T extends Checker<infer U>
   ? U
   : never;
 
-export const string: Validator<string> = {
-  validate: (value: unknown): value is string => {
+export const string: Checker<string> = {
+  check: (value: unknown): value is string => {
     return typeof value === 'string';
   },
 };
 
-export const number: Validator<number> = {
-  validate: (value: unknown): value is number => {
+export const number: Checker<number> = {
+  check: (value: unknown): value is number => {
     return typeof value === 'number';
   },
 };
 
-export const boolean: Validator<boolean> = {
-  validate: (value: unknown): value is boolean => {
+export const boolean: Checker<boolean> = {
+  check: (value: unknown): value is boolean => {
     return typeof value === 'boolean';
   },
 };
 
-export const nil: Validator<null> = {
-  validate: (value: unknown): value is null => {
+export const nil: Checker<null> = {
+  check: (value: unknown): value is null => {
     return value === null;
   },
 };
 
-export const unknown: Validator<unknown> = {
-  validate: (value: unknown): value is unknown => {
+export const unknown: Checker<unknown> = {
+  check: (value: unknown): value is unknown => {
     return true;
   },
 };
 
-export function literal<T extends string>(str: T): Validator<T> {
+export function literal<T extends string>(str: T): Checker<T> {
   return {
-    validate(value: unknown): value is T {
+    check(value: unknown): value is T {
       return value === str;
     },
   };
 }
 
-export function any<T extends Validator<unknown>>(
+export function any<T extends Checker<unknown>>(
   validators: T[]
-): Validator<JsonOf<T>> {
+): Checker<JsonOf<T>> {
   return {
-    validate(value: unknown): value is JsonOf<T> {
-      return validators.some(validator => validator.validate(value));
+    check(value: unknown): value is JsonOf<T> {
+      return validators.some(validator => validator.check(value));
     },
   };
 }
 
-export function nullable<T>(validator: Validator<T>): Validator<T | null> {
+export function nullable<T>(validator: Checker<T>): Checker<T | null> {
   return {
-    validate(value: unknown): value is T | null {
-      return value === null || validator.validate(value);
+    check(value: unknown): value is T | null {
+      return value === null || validator.check(value);
     },
   };
 }
 
-export function array<T extends Validator<unknown>>(
+export function array<T extends Checker<unknown>>(
   validator: T
-): Validator<JsonOf<T>[]> {
+): Checker<JsonOf<T>[]> {
   return {
-    validate(value: unknown): value is JsonOf<T>[] {
-      return Array.isArray(value) && value.every(it => validator.validate(it));
+    check(value: unknown): value is JsonOf<T>[] {
+      return Array.isArray(value) && value.every(it => validator.check(it));
     },
   };
 }
 
-export function object<T extends {[key: string]: Validator<unknown>}>(
+export function object<T extends {[key: string]: Checker<unknown>}>(
   properties: T
-): Validator<ExpandRecursively<ObjectJsonOf<T>>> {
+): Checker<ExpandRecursively<ObjectJsonOf<T>>> {
   return {
-    validate(value: unknown): value is ExpandRecursively<ObjectJsonOf<T>> {
+    check(value: unknown): value is ExpandRecursively<ObjectJsonOf<T>> {
       if (typeof value !== 'object' || value === null) return false;
       return Object.keys(properties).every(key => {
         const unescapedKey = unescapePropertyName(key);
         if (has(value, unescapedKey)) {
-          return properties[key].validate(value[unescapedKey]);
+          return properties[key].check(value[unescapedKey]);
         } else {
           return isOptionalProperty(key);
         }
@@ -102,7 +102,7 @@ type FilterRequiredPropertyName<T> = T extends `${infer U}??`
   ? never
   : T;
 
-type ObjectJsonOf<T extends {[k: string]: Validator<unknown>}> = {
+type ObjectJsonOf<T extends {[k: string]: Checker<unknown>}> = {
   [K in keyof T as FilterRequiredPropertyName<K>]-?: JsonOf<T[K]>;
 } &
   {[K in keyof T as FilterOptionalPropertyName<K>]+?: JsonOf<T[K]>};
