@@ -1,8 +1,10 @@
 # typist-json
 
-A simple type-safe JSON validator.
+A simple runtime JSON type checker.
 
-- **Simple**. No JSON Schema required
+# Features
+
+- **Simple**. No JSON Schema, No validation rules
 - **Type-safe**. Written in TypeScript
 - **Intuitive**. Familiar syntax like TypeScript interface
 
@@ -17,7 +19,7 @@ npm install typist-json
 ```typescript
 import { j } from 'typist-json'
 
-const UserJsonValidator = j.object({
+const UserJsonType = j.object({
   name: j.string,
   age: j.number,
   'nickname?': j.string, // optional property
@@ -26,7 +28,7 @@ const UserJsonValidator = j.object({
 const userJson = await fetch("/api/user")
     .then(res => res.json)
 
-if (UserJsonValidator.validate(userJson)) {
+if (UserJsonType.check(userJson)) {
   // now, the userJson is narrowed to:
   // {
   //   name: string
@@ -38,151 +40,149 @@ if (UserJsonValidator.validate(userJson)) {
 
 # References
 
-## Validator\<T>
+## Checker\<T>
 
-A base interface that all validators implement.
+A base interface that all type checkers implement.
 
-### validate(value: unknown): value is T
+### check(value: unknown): value is T
 
-Validate whether the `value` is valid as `T` or not.
+Check whether the `value` is of type `T` or not.
 
-If `validate` returns `true` then the `value` is valid as `T`
+If `check` returns `true` then the `value` is of type `T`
 and the `value` is narrowed to `T`.
 
 ## j
 
-A container that contains all built-in validators.
+A container that contains all built-in type checkers.
 
-All built-in validators are followings:
+All built-in type checkers are followings:
 
 ### j.string
 
-A validator that validates whether the value is `string` or not.
+Checks if the value is string type or not.
 
 ```TypeScript
-j.string.validate("foo") // true, narrowed to `string`
+j.string.check("foo") // true, narrowed to `string`
 ```
 
 ### j.number
 
-A validator that validates whether the value is `number` or not.
+Checks if the value is number type or not.
 
 ```TypeScript
-j.number.validate(42.195) // true, narrowed to `number`
+j.number.check(42.195) // true, narrowed to `number`
 ```
 
 ### j.boolean
 
-A validator that validates whether the value is `boolean` or not.
+Checks if the value is boolean type or not.
 
 ```TypeScript
-j.boolean.validate(true) // true, narrowed to `boolean`
+j.boolean.check(true) // true, narrowed to `boolean`
 ```
 
 ### j.literal(str: string)
 
-A validator that validates whether the value is the same as `str` or not.
+Checks if the value equals `str` or not.
 
 ```TypeScript
 const json: any = "foo"
-j.literal("foo").validate(json) // true, narrowed to `"foo"`
-j.literal("foo").validate("bar") // false
+j.literal("foo").check(json) // true, narrowed to `"foo"`
+j.literal("foo").check("bar") // false
 ```
 
 ### j.unknown
 
-A validator that does not validate values.
-
-This validator doesn't narrow type of the given value.
+Doesn't check the value type. This won't narrow types.
 
 ```TypeScript
-j.unknown.validate("foo") // true
-j.unknown.validate({a: 42}) // true
+j.unknown.check("foo") // true
+j.unknown.check({a: 42}) // true
 ```
 
 ### j.nil
 
-A validator that validates whether the value is `null` or not.
+Checks if the value is `null` or not.
 
 ```TypeScript
-j.nil.validate(null) // true, narrowed to `null`
+j.nil.check(null) // true, narrowed to `null`
 ```
 
-### j.nullable(validator: Validator)
+### j.nullable(checker: Checker)
 
-A validator that validates whether the value is `null` or valid as given `validator`.
+Checks if the value is `null` or matches the checker.
 
 ```TypeScript
-j.nullable(string).validate(null) // true, narrowed to `string | null`
-j.nullable(string).validate("foo") // true, narrowed to `string | null`
+j.nullable(string).check(null) // true, narrowed to `string | null`
+j.nullable(string).check("foo") // true, narrowed to `string | null`
 ```
 
-### j.any(validators: Validator[])
+### j.any(checkers: Checker[])
 
-A validator that validates whether the value is valid as any of `validators`.
+Checks if the value matches any of the checkers.
 
 ```TypeScript
 const validator = j.any([string, number])
-validator.validate("foo") // true, narrowed to `string | number`
-validator.validate(42) // true, narrowed to `string | number`
+validator.check("foo") // true, narrowed to `string | number`
+validator.check(42) // true, narrowed to `string | number`
 ```
 
-### j.array(validator: Validator)
+### j.array(checker: Checker)
 
-A validator that validates whether the value is an array of value that valid as `validator`.
+Checks if the value is an array of elements that match the checker.
 
 ```TypeScript
-j.array(string).validate(["foo", "bar"]) // true, narrowed to `string[]`
+j.array(string).check(["foo", "bar"]) // true, narrowed to `string[]`
 ```
 
-### j.object(properties: {[key: string]: Validator})
+### j.object(properties: {[key: string]: Checker})
 
-A validator that validates whether a value is an object composed of `properties`.
+Checks if the value is an object that consists of `properties` and each property matches correspond checkers.
 
 A property name ends with `?` is considered optional.
 
 ```TypeScript
-const validator = j.object({
+const checker = j.object({
   name: j.string,
   age: j.number,
   'nickname?': j.string,
 })
 
 // true, narrowed to { name: string, age: number, nickname?: string | undefined }
-validator.validate({
+checker.ckeck({
   name: "John",
   age: 42,
   nickname: "Johnny",
-)
+})
 
 // true, because `nickname` is optional.
 // narrowed to { name: string, age: number, nickname?: string | undefined }
-validator.validate({
+checker.ckeck({
   name: "Emma",
   age: 20,
 })
 
 // false, because `nickname` is optional, not nullable.
 // optional properties are distinguished from nullable properties.
-validator.validate({
+checker.check({
   name: "Bob",
   age: 18,
   nickname: null, // invalid
 })
 
 // similarly, nullable properties cannot be omitted.
-j.object({ foo: j.nullable(j.string) }).validate({}) // false, because property named `foo` is required
+j.object({ foo: j.nullable(j.string) }).check({}) // false, because property named `foo` is required
 ```
 
 If you want to use property name that ends with `?` as non-optional property, you can escape `?` as `??`.
 
 ```TypeScript
-const validator = j.object({
+const checker = j.object({
   "are_you_sure??": j.boolean,
 })
 
 // true, narrowed to { "are_you_sure?": boolean }
-validator.validate({
+checker.check({
   "are_you_sure?": true,
 })
 ```
@@ -196,23 +196,23 @@ So if you want optional property with a name `"foo???"`,
 you should use `"foo???????"` as property name for `j.object` like:
 
 ```TypeScript
-const validator = j.object({
+const checker = j.object({
   "foo???????": j.boolean,
 })
 
 // true, narrowed to { "foo???"?: boolean | undefined }
-validator.validate({
+checker.check({
   "foo???": true,
 })
 ```
 </details>
 
-## JsonOf\<Validator>
+## JsonOf\<Checker>
 
-A type alias that represents the type of JSON corresponding to the `Validator`.
+A type alias that represents the type of JSON corresponding to the `Checker`.
 
 ```TypeScript
-const validator = j.object({
+const checker = j.object({
   model: j.string,
   os: j.any([
     j.literal("ios"),
@@ -222,7 +222,7 @@ const validator = j.object({
   serial_number: j.string,
 })
 
-type SmartPhoneJson = JsonOf<typeof validator>
+type SmartPhoneJson = JsonOf<typeof checker>
 // SmartPhoneJson will be:
 // {
 //   model: string
@@ -230,3 +230,4 @@ type SmartPhoneJson = JsonOf<typeof validator>
 //   serial_number: string
 // }
 ```
+🙇‍♂️💯
