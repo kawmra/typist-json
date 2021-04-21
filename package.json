@@ -12,11 +12,9 @@
     "test": "jest",
     "test:d": "npm run build && tsd",
     "lint": "eslint",
-    "clean": "rimraf build lib",
+    "clean": "rimraf lib",
     "fix": "eslint --fix",
-    "compile": "tsc",
-    "bundle": "rollup --config",
-    "build": "npm run clean && npm run compile && npm run bundle"
+    "build": "rollup --config rollup.config.ts"
   },
   "repository": {
     "type": "git",
