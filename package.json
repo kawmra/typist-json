@@ -1,7 +1,7 @@
 {
   "name": "typist-json",
   "version": "0.0.3",
-  "description": "A simple JSON validator",
+  "description": "A simple runtime JSON type checker",
   "main": "./lib/index.js",
   "module": "./lib/index.esm.js",
   "types": "./lib/index.d.ts",
@@ -24,7 +24,7 @@
   },
   "keywords": [
     "json",
-    "validator",
+    "type-checker",
     "typescript"
   ],
   "author": "kawmra",
