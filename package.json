@@ -34,7 +34,7 @@
   },
   "homepage": "https://github.com/kawmra/typist-json#readme",
   "devDependencies": {
-    "@rollup/plugin-typescript": "^8.2.0",
+    "@rollup/plugin-typescript": "^8.2.1",
     "@types/jest": "^26.0.20",
     "@types/node": "^14.11.2",
     "gts": "^3.1.0",
