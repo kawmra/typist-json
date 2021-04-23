@@ -2,7 +2,6 @@ import {
   any,
   array,
   boolean,
-  Checker,
   isOptionalProperty,
   literal,
   nil,
@@ -13,6 +12,7 @@ import {
   unescapePropertyName,
   unknown,
 } from '../src/checker';
+import {Checker} from '../src';
 
 export class TestChecker implements Checker<unknown> {
   isCalled = false;

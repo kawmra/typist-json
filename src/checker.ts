@@ -1,11 +1,3 @@
-export interface Checker<T> {
-  check(value: unknown): value is T;
-}
-
-export type JsonOf<T extends Checker<unknown>> = T extends Checker<infer U>
-  ? U
-  : never;
-
 export const string: Checker<string> = {
   check: (value: unknown): value is string => {
     return typeof value === 'string';
