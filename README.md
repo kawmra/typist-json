@@ -207,7 +207,7 @@ checker.check({
 ```
 </details>
 
-## JsonOf\<Checker>
+## JsonTypeOf\<Checker>
 
 A type alias that represents the type of JSON corresponding to the `Checker`.
 
@@ -222,7 +222,7 @@ const checker = j.object({
   serial_number: j.string,
 })
 
-type SmartPhoneJson = JsonOf<typeof checker>
+type SmartPhoneJson = JsonTypeOf<typeof checker>
 // SmartPhoneJson will be:
 // {
 //   model: string

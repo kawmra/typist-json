@@ -1,3 +1,5 @@
+import {Checker, JsonTypeOf} from './types';
+
 export const string: Checker<string> = {
   check: (value: unknown): value is string => {
     return typeof value === 'string';
@@ -38,9 +40,9 @@ export function literal<T extends string>(str: T): Checker<T> {
 
 export function any<T extends Checker<unknown>>(
   validators: T[]
-): Checker<JsonOf<T>> {
+): Checker<JsonTypeOf<T>> {
   return {
-    check(value: unknown): value is JsonOf<T> {
+    check(value: unknown): value is JsonTypeOf<T> {
       return validators.some(validator => validator.check(value));
     },
   };
@@ -56,9 +58,9 @@ export function nullable<T>(validator: Checker<T>): Checker<T | null> {
 
 export function array<T extends Checker<unknown>>(
   validator: T
-): Checker<JsonOf<T>[]> {
+): Checker<JsonTypeOf<T>[]> {
   return {
-    check(value: unknown): value is JsonOf<T>[] {
+    check(value: unknown): value is JsonTypeOf<T>[] {
       return Array.isArray(value) && value.every(it => validator.check(it));
     },
   };
@@ -95,9 +97,9 @@ type FilterRequiredPropertyName<T> = T extends `${infer U}??`
   : T;
 
 type ObjectJsonOf<T extends {[k: string]: Checker<unknown>}> = {
-  [K in keyof T as FilterRequiredPropertyName<K>]-?: JsonOf<T[K]>;
+  [K in keyof T as FilterRequiredPropertyName<K>]-?: JsonTypeOf<T[K]>;
 } &
-  {[K in keyof T as FilterOptionalPropertyName<K>]+?: JsonOf<T[K]>};
+  {[K in keyof T as FilterOptionalPropertyName<K>]+?: JsonTypeOf<T[K]>};
 
 type ExpandRecursively<T> = T extends object
   ? T extends infer O
