@@ -39,29 +39,29 @@ export function literal<T extends string>(str: T): Checker<T> {
 }
 
 export function any<T extends Checker<unknown>>(
-  validators: T[]
+  checkers: T[]
 ): Checker<JsonTypeOf<T>> {
   return {
     check(value: unknown): value is JsonTypeOf<T> {
-      return validators.some(validator => validator.check(value));
+      return checkers.some(checker => checker.check(value));
     },
   };
 }
 
-export function nullable<T>(validator: Checker<T>): Checker<T | null> {
+export function nullable<T>(checker: Checker<T>): Checker<T | null> {
   return {
     check(value: unknown): value is T | null {
-      return value === null || validator.check(value);
+      return value === null || checker.check(value);
     },
   };
 }
 
 export function array<T extends Checker<unknown>>(
-  validator: T
+  checker: T
 ): Checker<JsonTypeOf<T>[]> {
   return {
     check(value: unknown): value is JsonTypeOf<T>[] {
-      return Array.isArray(value) && value.every(it => validator.check(it));
+      return Array.isArray(value) && value.every(it => checker.check(it));
     },
   };
 }

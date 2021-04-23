@@ -122,9 +122,9 @@ j.nullable(string).check("foo") // true, narrowed to `string | null`
 Checks if the value matches any of the checkers.
 
 ```TypeScript
-const validator = j.any([string, number])
-validator.check("foo") // true, narrowed to `string | number`
-validator.check(42) // true, narrowed to `string | number`
+const checker = j.any([string, number])
+checker.check("foo") // true, narrowed to `string | number`
+checker.check(42) // true, narrowed to `string | number`
 ```
 
 ### j.array(checker: Checker)
