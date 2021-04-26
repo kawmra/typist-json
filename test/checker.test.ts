@@ -151,6 +151,35 @@ describe('checker', () => {
       ).toBe(false);
     });
 
+    it('should return true if lazy checker returns true', () => {
+      expect(
+        object({
+          foo: () => new TestChecker(true),
+        }).check({foo: null})
+      ).toBe(true);
+    });
+
+    it('should return false if lazy checker returns false', () => {
+      expect(
+        object({
+          foo: () => new TestChecker(false),
+        }).check({foo: null})
+      ).toBe(false);
+    });
+
+    it('should return false if function does not return checker', () => {
+      expect(
+        object({
+          foo: () => 'foo',
+        }).check({foo: 'foo'})
+      ).toBe(false);
+      expect(
+        object({
+          foo: () => null,
+        }).check({foo: null})
+      ).toBe(false);
+    });
+
     it('should return false if required property is missing', () => {
       expect(object({foo: new TestChecker(true)}).check({})).toBe(false);
       expect(object({'bar??': new TestChecker(true)}).check({})).toBe(false);

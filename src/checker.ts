@@ -66,22 +66,40 @@ export function array<T extends Checker<unknown>>(
   };
 }
 
-export function object<T extends {[key: string]: Checker<unknown>}>(
+export function object<T extends {[key: string]: Checker<unknown> | Function}>(
   properties: T
-): Checker<ExpandRecursively<ObjectJsonOf<T>>> {
+): Checker<ExpandRecursively<ObjectJsonTypeOf<T>>> {
   return {
-    check(value: unknown): value is ExpandRecursively<ObjectJsonOf<T>> {
+    check(value: unknown): value is ExpandRecursively<ObjectJsonTypeOf<T>> {
       if (typeof value !== 'object' || value === null) return false;
       return Object.keys(properties).every(key => {
         const unescapedKey = unescapePropertyName(key);
         if (has(value, unescapedKey)) {
-          return properties[key].check(value[unescapedKey]);
+          const checkerOrFunction = properties[key];
+          if (isChecker(checkerOrFunction)) {
+            return checkerOrFunction.check(value[unescapedKey]);
+          }
+          const lazyChecker: unknown = checkerOrFunction();
+          if (isChecker(lazyChecker)) {
+            return lazyChecker.check(value[unescapedKey]);
+          } else {
+            return false;
+          }
         } else {
           return isOptionalProperty(key);
         }
       });
     },
   };
+}
+
+function isChecker(target: unknown): target is Checker<unknown> {
+  return (
+    typeof target === 'object' &&
+    target !== null &&
+    has(target, 'check') &&
+    typeof target.check === 'function'
+  );
 }
 
 type FilterOptionalPropertyName<T> = T extends `${infer U}??`
@@ -96,10 +114,24 @@ type FilterRequiredPropertyName<T> = T extends `${infer U}??`
   ? never
   : T;
 
-type ObjectJsonOf<T extends {[k: string]: Checker<unknown>}> = {
-  [K in keyof T as FilterRequiredPropertyName<K>]-?: JsonTypeOf<T[K]>;
+type ObjectJsonTypeOf<T extends {[k: string]: Checker<unknown> | Function}> = {
+  [K in keyof T as FilterRequiredPropertyName<K>]-?: T[K] extends Checker<unknown>
+    ? JsonTypeOf<T[K]>
+    : T[K] extends Function
+    ? LazyChecker<T[K]>
+    : never;
 } &
-  {[K in keyof T as FilterOptionalPropertyName<K>]+?: JsonTypeOf<T[K]>};
+  {
+    [K in keyof T as FilterOptionalPropertyName<K>]+?: T[K] extends Checker<unknown>
+      ? JsonTypeOf<T[K]>
+      : T[K] extends Function
+      ? LazyChecker<T[K]>
+      : never;
+  };
+
+type LazyChecker<T extends Function> = T extends () => Checker<infer U>
+  ? U
+  : never;
 
 type ExpandRecursively<T> = T extends object
   ? T extends infer O

@@ -66,6 +66,8 @@ expectType<Checker<{foo: string}[]>>(j.array(j.object({foo: j.string})));
 
 // object
 expectType<Checker<{}>>(j.object({}));
+expectType<Checker<{foo: string}>>(j.object({foo: () => j.string}));
+expectType<Checker<{foo: never}>>(j.object({foo: () => 'foo'}));
 expectType<Checker<{optional?: string}>>(j.object({'optional?': j.string}));
 expectNotType<Checker<{optional: string | undefined}>>(
   j.object({'optional?': j.string})
