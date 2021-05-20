@@ -42,14 +42,14 @@ if (UserJson.check(userJson)) {
 
 # Type checkers
 
-## String
+## Strings
 
 ```ts
 j.string.check("foo"); // true
 j.string.check("bar"); // true
 ```
 
-## Number
+## Numbers
 
 ```ts
 j.number.check(42); // true
@@ -57,7 +57,7 @@ j.number.check(12.3); // true
 j.number.check("100"); // false
 ```
 
-## Boolean
+## Booleans
 
 ```ts
 j.boolean.check(true); // true
