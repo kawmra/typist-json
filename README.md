@@ -162,7 +162,7 @@ j.unknown.check([{}, 123, false, "foo"]); // true
 ## Unions
 
 ```ts
-j.any([j.string, j.boolean]).check("foo"); // true
+j.any([j.string, j.boolean]).check(false); // true
 
 j.any([
   j.literal("foo"),
