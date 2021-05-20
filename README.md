@@ -8,6 +8,8 @@ A simple runtime JSON type checker.
 - **Type-safe**. Written in TypeScript
 - **Intuitive**. Familiar syntax like TypeScript interface
 
+typist-json is focused on type checking, so there is no validation rules like range of numbers or length of strings.
+
 # Install
 
 ```shell
@@ -17,18 +19,18 @@ npm install typist-json
 # Example
 
 ```typescript
-import { j } from 'typist-json'
+import { j } from "typist-json";
 
-const UserJsonType = j.object({
+const UserJson = j.object({
   name: j.string,
   age: j.number,
-  'nickname?': j.string, // optional property
-})
+  "nickname?": j.string, // optional property
+});
 
 const userJson = await fetch("/api/user")
-    .then(res => res.json)
+    .then(res => res.json);
 
-if (UserJsonType.check(userJson)) {
+if (UserJson.check(userJson)) {
   // now, the userJson is narrowed to:
   // {
   //   name: string
@@ -38,154 +40,79 @@ if (UserJsonType.check(userJson)) {
 }
 ```
 
-# References
+# Type checkers
 
-## Checker\<T>
+## String
 
-A base interface that all type checkers implement.
-
-### check(value: unknown): value is T
-
-Check whether the `value` is of type `T` or not.
-
-If `check` returns `true` then the `value` is of type `T`
-and the `value` is narrowed to `T`.
-
-## j
-
-A container that contains all built-in type checkers.
-
-All built-in type checkers are followings:
-
-### j.string
-
-Checks if the value is string type or not.
-
-```TypeScript
-j.string.check("foo") // true, narrowed to `string`
+```ts
+j.string.check("foo"); // true
+j.string.check("bar"); // true
 ```
 
-### j.number
+## Number
 
-Checks if the value is number type or not.
-
-```TypeScript
-j.number.check(42.195) // true, narrowed to `number`
+```ts
+j.number.check(42); // true
+j.number.check(12.3); // true
+j.number.check("100"); // false
 ```
 
-### j.boolean
+## Boolean
 
-Checks if the value is boolean type or not.
-
-```TypeScript
-j.boolean.check(true) // true, narrowed to `boolean`
+```ts
+j.boolean.check(true); // true
+j.boolean.check(false); // true
 ```
 
-### j.literal(str: string)
+## Literals
 
-Checks if the value equals `str` or not.
-
-```TypeScript
-const json: any = "foo"
-j.literal("foo").check(json) // true, narrowed to `"foo"`
-j.literal("foo").check("bar") // false
+```ts
+j.literal("foo").check("foo"); // true
+j.literal("foo").check("fooooo"); // false
 ```
 
-### j.unknown
+## Arrays
 
-Doesn't check the value type. This won't narrow types.
-
-```TypeScript
-j.unknown.check("foo") // true
-j.unknown.check({a: 42}) // true
+```ts
+j.array(j.string).check(["foo", "bar"]); // true
+j.array(j.string).check(["foo", 42]); // false
+j.array(j.string).check([]); // true
+j.array(j.number).check([]); // true
 ```
 
-### j.nil
+## Objects
 
-Checks if the value is `null` or not.
-
-```TypeScript
-j.nil.check(null) // true, narrowed to `null`
-```
-
-### j.nullable(checker: Checker)
-
-Checks if the value is `null` or matches the checker.
-
-```TypeScript
-j.nullable(string).check(null) // true, narrowed to `string | null`
-j.nullable(string).check("foo") // true, narrowed to `string | null`
-```
-
-### j.any(checkers: Checker[])
-
-Checks if the value matches any of the checkers.
-
-```TypeScript
-const checker = j.any([string, number])
-checker.check("foo") // true, narrowed to `string | number`
-checker.check(42) // true, narrowed to `string | number`
-```
-
-### j.array(checker: Checker)
-
-Checks if the value is an array of elements that match the checker.
-
-```TypeScript
-j.array(string).check(["foo", "bar"]) // true, narrowed to `string[]`
-```
-
-### j.object(properties: {[key: string]: Checker})
-
-Checks if the value is an object that consists of `properties` and each property matches correspond checkers.
-
-A property name ends with `?` is considered optional.
-
-```TypeScript
-const checker = j.object({
+```ts
+j.object({
   name: j.string,
   age: j.number,
-  'nickname?': j.string,
-})
-
-// true, narrowed to { name: string, age: number, nickname?: string | undefined }
-checker.ckeck({
+  "nickname?": j.string,
+}).check({
   name: "John",
-  age: 42,
+  age: 20,
   nickname: "Johnny",
-})
+}); // true
 
-// true, because `nickname` is optional.
-// narrowed to { name: string, age: number, nickname?: string | undefined }
-checker.ckeck({
+j.object({
+  name: j.string,
+  age: j.number,
+  "nickname?": j.string,
+}).check({
   name: "Emma",
   age: 20,
-})
+}); // true, since "nickname" is optional
 
-// false, because `nickname` is optional, not nullable.
-// optional properties are distinguished from nullable properties.
-checker.check({
-  name: "Bob",
-  age: 18,
-  nickname: null, // invalid
-})
-
-// similarly, nullable properties cannot be omitted.
-j.object({ foo: j.nullable(j.string) }).check({}) // false, because property named `foo` is required
+j.object({
+  name: j.string,
+  age: j.number,
+  "nickname?": j.string,
+}).check({
+  id: "xxxx",
+  type: "android",
+}); // false, since "name" and "age" is required
 ```
 
 If you want to use property name that ends with `?` as non-optional property, you can escape `?` as `??`.
-
-```TypeScript
-const checker = j.object({
-  "are_you_sure??": j.boolean,
-})
-
-// true, narrowed to { "are_you_sure?": boolean }
-checker.check({
-  "are_you_sure?": true,
-})
-```
 
 <details>
 <summary>More details about escaping</summary>
@@ -193,9 +120,9 @@ checker.check({
 As mentioned above, you need to escape all trailing `?` as `??`.
 
 So if you want optional property with a name `"foo???"`,
-you should use `"foo???????"` as property name for `j.object` like:
+you should use `"foo???????"` as key like:
 
-```TypeScript
+```ts
 const checker = j.object({
   "foo???????": j.boolean,
 })
@@ -207,27 +134,60 @@ checker.check({
 ```
 </details>
 
-## JsonTypeOf\<Checker>
+## Nulls
 
-A type alias that represents the type of JSON corresponding to the `Checker`.
+```ts
+j.nil.check(null); // true
+j.nil.check(undefined); // false
+```
 
-```TypeScript
-const checker = j.object({
-  model: j.string,
-  os: j.any([
-    j.literal("ios"),
-    j.literal("android"),
-    j.literal("blackberry")
-  ]),
-  serial_number: j.string,
-})
+## Nullables
 
-type SmartPhoneJson = JsonTypeOf<typeof checker>
-// SmartPhoneJson will be:
-// {
-//   model: string
-//   os: "ios" | "android" | "blackberry"
-//   serial_number: string
+```ts
+j.nullable(j.string).check("foo"); // true
+j.nullable(j.string).check(null); // true
+j.nullable(j.string).check(undefined); // false
+```
+
+## Unknowns
+
+```ts
+j.unknown.check("foo"); // true
+j.unknown.check(123); // true
+j.unknown.check(null); // true
+j.unknown.check(undefined); // true
+j.unknown.check([{}, 123, false, "foo"]); // true
+```
+
+## Unions
+
+```ts
+j.any([j.string, j.boolean]).check("foo"); // true
+
+j.any([
+  j.literal("foo"),
+  j.literal("bar"),
+]).check("foo"); // true
+```
+
+# Get JSON type of checkers
+
+```ts
+import { j, JsonTypeOf } from "typist-json";
+
+const UserJson = j.object({
+  name: j.string,
+  age: j.number,
+  "nickname?": j.string,
+});
+
+type UserJsonType = JsonTypeOf<typeof UserJson>;
+// 
+// ^ This is same as:
+// 
+// type UserJsonType = {
+//   name: string;
+//   age: number;
+//   nickname?: string;
 // }
 ```
-🙇‍♂️💯
