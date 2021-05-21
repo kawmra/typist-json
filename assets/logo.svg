@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="none" viewBox="0 0 60 60">
+  <rect width="47" height="9" x="6" y="15" fill="#484848" rx="2"/>
+  <path fill="#484848" d="M17 19h25v11H17zM9 45h41v3a2 2 0 01-2 2H11a2 2 0 01-2-2v-3z"/>
+  <path fill="#696969" d="M9 44h41v3a2 2 0 01-2 2H11a2 2 0 01-2-2v-3z"/>
+  <path fill="#A6A6A6" d="M9 30h41v14a2 2 0 01-2 2H11a2 2 0 01-2-2V30z"/>
+  <rect width="33" height="12" x="13" y="32" fill="#545454" rx="1"/>
+  <circle cx="16" cy="35" r="1" fill="#C4C4C4"/>
+  <circle cx="17.5" cy="38" r="1" fill="#C4C4C4"/>
+  <circle cx="20.5" cy="38" r="1" fill="#C4C4C4"/>
+  <circle cx="19" cy="41" r="1" fill="#C4C4C4"/>
+  <circle cx="16" cy="41" r="1" fill="#C4C4C4"/>
+  <circle cx="40" cy="41" r="1" fill="#C4C4C4"/>
+  <circle cx="43" cy="41" r="1" fill="#C4C4C4"/>
+  <circle cx="23.5" cy="38" r="1" fill="#C4C4C4"/>
+  <circle cx="26.5" cy="38" r="1" fill="#C4C4C4"/>
+  <circle cx="29.5" cy="38" r="1" fill="#C4C4C4"/>
+  <circle cx="32.5" cy="38" r="1" fill="#C4C4C4"/>
+  <circle cx="35.5" cy="38" r="1" fill="#C4C4C4"/>
+  <circle cx="38.5" cy="38" r="1" fill="#C4C4C4"/>
+  <circle cx="41.5" cy="38" r="1" fill="#C4C4C4"/>
+  <circle cx="19" cy="35" r="1" fill="#C4C4C4"/>
+  <circle cx="22" cy="35" r="1" fill="#C4C4C4"/>
+  <circle cx="25" cy="35" r="1" fill="#C4C4C4"/>
+  <circle cx="28" cy="35" r="1" fill="#C4C4C4"/>
+  <circle cx="31" cy="35" r="1" fill="#C4C4C4"/>
+  <circle cx="34" cy="35" r="1" fill="#C4C4C4"/>
+  <circle cx="37" cy="35" r="1" fill="#C4C4C4"/>
+  <circle cx="40" cy="35" r="1" fill="#C4C4C4"/>
+  <circle cx="43" cy="35" r="1" fill="#C4C4C4"/>
+  <rect width="17" height="2" x="21" y="40" fill="#C4C4C4" rx="1"/>
+  <path fill="#C4C4C4" fill-rule="evenodd" d="M35.756 26.322a12.5 12.5 0 004.57-4.572L37.293 20H48a2 2 0 012 2v8H9v-8a2 2 0 012-2h10.743l-3.055 1.773a12.5 12.5 0 0017.068 4.549z" clip-rule="evenodd"/>
+  <g>
+    <mask id="a" width="23" height="10" x="18" y="19" maskUnits="userSpaceOnUse">
+      <path fill="#000" d="M18 19h23v10H18z"/>
+    </mask>
+    <g mask="url(#a)">
+      <mask id="b" width="25" height="25" x="17" y="3" maskUnits="userSpaceOnUse">
+        <path fill="#C4C4C4" fill-rule="evenodd" d="M29.5 28C36.404 28 42 22.404 42 15.5S36.404 3 29.5 3 17 8.596 17 15.5 22.596 28 29.5 28zm0-6a6.5 6.5 0 100-13 6.5 6.5 0 000 13z" clip-rule="evenodd"/>
+      </mask>
+      <g mask="url(#b)">
+        <path fill="#C4C4C4" fill-rule="evenodd" d="M29 11.702V3h1v8.702l2.252-8.405.966.258-2.252 8.406 4.351-7.536.866.5-4.351 7.536 6.153-6.153.707.707-8.485 8.485 8.485 8.485-.707.707-6.153-6.153 4.351 7.536-.866.5-4.351-7.536 2.252 8.406-.966.258L30 19.298V28h-1v-8.702l-2.252 8.405-.966-.258 2.252-8.406-4.351 7.536-.866-.5 4.351-7.536-6.153 6.153-.707-.707 8.485-8.485-8.485-8.485.707-.707 6.153 6.153-4.351-7.536.866-.5 4.351 7.536-2.252-8.406.966-.258L29 11.702z" clip-rule="evenodd"/>
+        <circle cx="29.5" cy="15.5" r="7" stroke="#C4C4C4"/>
+      </g>
+    </g>
+  </g>
+  <path fill="#F5F5F5" d="M14 10h31v10H14z"/>
+  <path fill="#C4C4C4" d="M5 19a1 1 0 011-1v3a1 1 0 01-1-1v-1zM53 18a1 1 0 011 1v1a1 1 0 01-1 1v-3z"/>
+  <path stroke="#C4C4C4" d="M6 18.5h47"/>
+</svg>

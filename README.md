@@ -1,6 +1,18 @@
-# typist-json
+<p align="center">
+  <img src="assets/logo.svg" width="200">
+</p>
 
-A simple runtime JSON type checker.
+<h1 align="center">Typist JSON</h1>
+
+<p align="center">
+  <img src="https://badgen.net/bundlephobia/minzip/typist-json">
+  <img src="https://badgen.net/npm/types/typist-json">
+  <img src="https://badgen.net/npm/license/typist-json">
+</p>
+
+<p align="center">
+  A simple runtime JSON type checker.
+</p>
 
 # Features
 
