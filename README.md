@@ -5,9 +5,13 @@
 <h1 align="center">Typist JSON</h1>
 
 <p align="center">
-  <img src="https://badgen.net/bundlephobia/minzip/typist-json">
-  <img src="https://badgen.net/npm/types/typist-json">
-  <img src="https://badgen.net/npm/license/typist-json">
+  <a href="https://bundlephobia.com/result?p=typist-json">
+    <img alt="bundlephobia" src="https://badgen.net/bundlephobia/minzip/typist-json">
+  </a>
+  <img src="https://badgen.net/npm/types/typist-json?icon=typescript">
+  <a href="LICENSE">
+    <img src="https://badgen.net/npm/license/typist-json">
+  </a>
 </p>
 
 <p align="center">
@@ -20,7 +24,7 @@
 - **Type-safe**. Written in TypeScript
 - **Intuitive**. Familiar syntax like TypeScript interface
 
-typist-json is focused on type checking, so there is no validation rules like range of numbers or length of strings.
+Typist JSON is focused on type checking, so there is no validation rules like range of numbers or length of strings.
 
 # Install
 
@@ -28,13 +32,20 @@ typist-json is focused on type checking, so there is no validation rules like ra
 npm install typist-json
 ```
 
+**NOTE:** Require TypeScript 4.1 or higher because Typist JSON uses `Mapped Types` and `Template Literal Types`.
+
 # Example
 
 ```typescript
 import { j } from "typist-json";
 
+const NameJson = j.object({
+  firstname: j.string,
+  lastname: j.string,
+});
+
 const UserJson = j.object({
-  name: j.string,
+  name: NameJson,
   age: j.number,
   "nickname?": j.string, // optional property
 });
@@ -45,11 +56,55 @@ const userJson = await fetch("/api/user")
 if (UserJson.check(userJson)) {
   // now, the userJson is narrowed to:
   // {
-  //   name: string
+  //   name: {
+  //     firstname: string
+  //     lastname: string
+  //   }
   //   age: number
   //   nickname?: string | undefined
   // }
 }
+```
+
+## Circular References
+
+Sometimes JSON structures can form circular references.
+
+Typist JSON can represent circular references by wrapping checkers in the arrow function.
+
+```ts
+const FileJson = j.object({
+  filename: j.string,
+});
+
+const DirJson = j.object({
+  dirname: j.string,
+  entries: () => j.array(j.any([FileJson, DirJson])), // references itself
+});
+
+DirJson.check({
+  dirname: "animals",
+  entries: [
+    {
+      dirname: "cat",
+      entries: [
+        { filename: "american-shorthair.jpg" },
+        { filename: "munchkin.jpg" },
+        { filename: "persian.jpg" },
+      ],
+    },
+    {
+      dirname: "dog",
+      entries: [
+        { filename: "chihuahua.jpg" },
+        { filename: "pug.jpg" },
+        { filename: "shepherd.jpg" },
+      ],
+    },
+    { filename: "turtle.jpg" },
+    { filename: "shark.jpg" },
+  ],
+}); // true
 ```
 
 # Type checkers
