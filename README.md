@@ -6,11 +6,14 @@
 
 <p align="center">
   <a href="https://bundlephobia.com/result?p=typist-json">
-    <img alt="bundlephobia" src="https://badgen.net/bundlephobia/minzip/typist-json">
+    <img src="https://badgen.net/bundlephobia/minzip/typist-json" alt="minzipped size">
   </a>
-  <img src="https://badgen.net/npm/types/typist-json?icon=typescript">
+  <img src="https://badgen.net/npm/types/typist-json?icon=typescript" alt="types">
   <a href="LICENSE">
-    <img src="https://badgen.net/npm/license/typist-json">
+    <img src="https://badgen.net/npm/license/typist-json" alt="license">
+  </a>
+  <a href="https://github.com/kawmra/typist-json/actions/workflows/ci.yml">
+    <img src="https://github.com/kawmra/typist-json/actions/workflows/ci.yml/badge.svg" alt="ci">
   </a>
 </p>
 
