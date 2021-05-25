@@ -182,25 +182,28 @@ j.object({
 }); // false, since "name" and "age" is required
 ```
 
-If you want to use property name that ends with `?` as non-optional property, you can escape `?` as `??`.
+If a property that ends with `?` is not optional, you should replace all trailing `?` by `??`.
 
 <details>
 <summary>More details about escaping</summary>
 
 As mentioned above, you need to escape all trailing `?` as `??`.
 
+```ts
+j.object({
+    "foo??": j.boolean,
+}).check({
+    "foo?": true,
+}); // true
+```
+
 So if you want optional property with a name `"foo???"`,
-you should use `"foo???????"` as key like:
+you should use `"foo???????"` as key.
 
 ```ts
-const checker = j.object({
+j.object({
   "foo???????": j.boolean,
-})
-
-// true, narrowed to { "foo???"?: boolean | undefined }
-checker.check({
-  "foo???": true,
-})
+}).check({}); // true, since "foo???" is optional
 ```
 </details>
 
