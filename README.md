@@ -35,7 +35,7 @@ Typist JSON is focused on type checking, so there is no validation rules like ra
 npm install typist-json
 ```
 
-**NOTE:** Require TypeScript 4.1 or higher because Typist JSON uses `Mapped Types` and `Template Literal Types`.
+**NOTE:** Require TypeScript 4.1 or higher because Typist JSON uses [`Mapped Types`](https://www.typescriptlang.org/docs/handbook/2/mapped-types.html) and [`Template Literal Types`](https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html).
 
 # Example
 
