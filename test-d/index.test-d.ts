@@ -96,6 +96,7 @@ expectType<
     optional?: string;
     'escaped?': string;
     'escaped_optional?'?: string;
+    lazy: number | string;
   }>
 >(
   j.object({
@@ -114,5 +115,6 @@ expectType<
     'optional?': j.string,
     'escaped??': j.string,
     'escaped_optional???': j.string,
+    lazy: () => j.any([j.number, j.string]),
   })
 );
