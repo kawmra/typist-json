@@ -54,7 +54,7 @@ const UserJson = j.object({
 });
 
 const userJson = await fetch("/api/user")
-    .then(res => res.json);
+    .then(res => res.json());
 
 if (UserJson.check(userJson)) {
   // now, the userJson is narrowed to:
