@@ -1,6 +1,6 @@
 {
   "name": "typist-json",
-  "version": "0.0.5",
+  "version": "1.0.0",
   "description": "A simple runtime JSON type checker",
   "main": "./lib/index.js",
   "module": "./lib/index.esm.js",
